@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Charger le fichier orders_export.csv avec le bon séparateur
-orders_file = 'orders_export (9).csv'
+orders_file = 'orders_export_1 (4).csv'
 orders_df = pd.read_csv(orders_file, sep=',')
 
 # Group data by "Name" and summarize information into a new column "Note"
@@ -31,13 +31,25 @@ shipments_df = pd.DataFrame(columns=columns_to_create)
 shipments_df['Recipient Name'] = orders_df['Shipping Name']
 shipments_df['Company Name'] = orders_df['Shipping Company']
 shipments_df['Street'] = orders_df['Shipping Street']
-shipments_df['Zip Code'] = orders_df['Shipping Zip'].str.replace(' ', '')
+
+shipments_df['Zip Code'] = orders_df['Shipping Zip']
+shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace(' ', '')
+shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace("'", "")
+
 shipments_df['Recipient Email'] = orders_df['Email']
 shipments_df['Phone'] = orders_df['Shipping Phone']
 shipments_df['Payment Method'] = orders_df['Payment Method']
 shipments_df['Notes'] = orders_df['Notes']
 shipments_df['Area'] = orders_df["Shipping City"]
 shipments_df['Number'] = orders_df["Shipping Address1"]
+
+
+shipments_df['COD Amount'] = orders_df['Shipping Phone'].astype(float) + 1.5
+# Mettre 'COD Amount' à 0 si 'Payment Method' n'est pas "Cash on Delivery (COD)"
+shipments_df['COD Amount'] = shipments_df.apply(
+    lambda row: row['COD Amount'] if row['Payment Method'] == "Cash on Delivery (COD)" else 0,
+    axis=1)
+shipments_df['COD Amount'] = shipments_df['COD Amount'].astype(str).str.replace('.', ',', regex=False)
 
 # Assurez-vous que 'Lineitem quantity' ne contient pas de valeurs nulles ou non numériques
 orders_df['Lineitem quantity'] = pd.to_numeric(orders_df['Lineitem quantity'], errors='coerce').fillna(0)
@@ -57,10 +69,6 @@ shipments_df['Notes'] = shipments_df['Notes'].apply(lambda x: unidecode.unidecod
 shipments_df['Number'] = shipments_df['Number'].apply(lambda x: unidecode.unidecode(x))
 
 # Faites de même pour d'autres colonnes contenant du texte en grec
-
-
-# Enregistrer le DataFrame au format Excel
-shipments_df.to_excel('Created_Shipments.xlsx', index=False)
 
 # Si vous voulez enregistrer au format CSV avec point-virgule comme séparateur
 # Enregistrer au format CSV avec encodage UTF-8

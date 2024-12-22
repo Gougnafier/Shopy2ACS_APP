@@ -46,11 +46,12 @@ if uploaded_file:
     shipments_df['Area'] = orders_df["Shipping City"]
     shipments_df['Number'] = orders_df["Shipping Address1"]
 
+    shipments_df['COD Amount'] = orders_df['Shipping Phone'].astype(float) + 1.5
+    # Mettre 'COD Amount' à 0 si 'Payment Method' n'est pas "Cash on Delivery (COD)"
     shipments_df['COD Amount'] = shipments_df.apply(
-    lambda row: row['Total'] + 1.5 if row['Payment Method'] == "Cash on Delivery (COD)" else None,
-    axis=1)
+        lambda row: row['COD Amount'] if row['Payment Method'] == "Cash on Delivery (COD)" else 0,
+        axis=1)
     shipments_df['COD Amount'] = shipments_df['COD Amount'].astype(str).str.replace('.', ',', regex=False)
-
 
     orders_df['Lineitem quantity'] = pd.to_numeric(orders_df['Lineitem quantity'], errors='coerce').fillna(0)
     shipments_df['Weight'] = ((orders_df['Lineitem quantity'] * 0.315) + 0.03).astype(str)
