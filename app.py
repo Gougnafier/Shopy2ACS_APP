@@ -12,6 +12,10 @@ if uploaded_file:
     st.write("Fichier chargé avec succès !")
     orders_df = pd.read_csv(uploaded_file, sep=',')
 
+    # Étape 1.1 : Aperçu du fichier chargé 
+    st.write("Aperçu du fichier chargé :")
+    st.dataframe(orders_df)
+
     # Étape 2 : Traitement des données
     def merge_and_sum(group):
         note = "; ".join([f"{qty} : {name}" for name, qty in zip(group['Lineitem name'], group['Lineitem quantity'])])
