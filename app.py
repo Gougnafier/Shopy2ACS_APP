@@ -55,7 +55,7 @@ if uploaded_file:
 
     # Étape 3 : Aperçu des données traitées
     st.write("Aperçu des données traitées :")
-    st.dataframe(shipments_df.head())
+    st.dataframe(shipments_df)
 
     # Étape 4 : Télécharger le fichier CSV
     csv = shipments_df.to_csv(index=False, sep=';', encoding='utf-8')
