@@ -41,11 +41,11 @@ if uploaded_file:
         shipments_df = dfShipment(df)
 
         # Générer le CSV pour le pays
-        csv_data = df.to_csv(index=False, sep=';', encoding='utf-8')
+        csv_data = shipments_df.to_csv(index=False, sep=';', encoding='utf-8')
 
         st.write(f"Aperçu des données traitées pour {country} :")
         st.dataframe(shipments_df)
-        
+
         # Bouton de téléchargement pour ce pays
         st.download_button(
             label=f"Télécharger les commandes pour {country}",
