@@ -50,10 +50,10 @@ if uploaded_file:
     shipments_df['Area'] = orders_df["Shipping City"]
     shipments_df['Number'] = orders_df["Shipping Address1"]
 
-    shipments_df['COD Amount'] = orders_df['Shipping Phone'].astype(float) + 1.5
+    shipments_df['COD Amount'] = orders_df['Total'].astype(float) + 1.5
     # Mettre 'COD Amount' à 0 si 'Payment Method' n'est pas "Cash on Delivery (COD)"
     shipments_df['COD Amount'] = shipments_df.apply(
-        lambda row: row['COD Amount'] if row['Total'] == "Cash on Delivery (COD)" else 0,
+        lambda row: row['COD Amount'] if row['Payment Method'] == "Cash on Delivery (COD)" else 0,
         axis=1)
     shipments_df['COD Amount'] = shipments_df['COD Amount'].astype(str).str.replace('.', ',', regex=False)
 
