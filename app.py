@@ -34,13 +34,27 @@ if uploaded_file:
     shipments_df['Recipient Name'] = orders_df['Shipping Name']
     shipments_df['Company Name'] = orders_df['Shipping Company']
     shipments_df['Street'] = orders_df['Shipping Street']
-    shipments_df['Zip Code'] = orders_df['Shipping Zip'].str.replace(' ', '')
+
+    shipments_df['Zip Code'] = orders_df['Shipping Zip']
+    shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace(' ', '')
+    shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace("'", "")
+    
     shipments_df['Recipient Email'] = orders_df['Email']
-    shipments_df['Phone'] = orders_df['Shipping Phone']
+
+    shipments_df['Phone'] = shipments_df.apply(
+    lambda row: f"357{row['Phone']}" if row['Billing Country'] == "CY" and pd.notnull(row['Phone']) else row['Phone'],
+    axis=1
+)
     shipments_df['Payment Method'] = orders_df['Payment Method']
     shipments_df['Notes'] = orders_df['Notes']
     shipments_df['Area'] = orders_df["Shipping City"]
     shipments_df['Number'] = orders_df["Shipping Address1"]
+
+    shipments_df['COD Amount'] = shipments_df.apply(
+    lambda row: row['Total'] + 1.5 if row['Payment Method'] == "Cash on Delivery (COD)" else None,
+    axis=1)
+    shipments_df['COD Amount'] = shipments_df['COD Amount'].astype(str).str.replace('.', ',', regex=False)
+
 
     orders_df['Lineitem quantity'] = pd.to_numeric(orders_df['Lineitem quantity'], errors='coerce').fillna(0)
     shipments_df['Weight'] = ((orders_df['Lineitem quantity'] * 0.315) + 0.03).astype(str)
