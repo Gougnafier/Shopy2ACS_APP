@@ -38,13 +38,9 @@ if uploaded_file:
     shipments_df['Zip Code'] = orders_df['Shipping Zip']
     shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace(' ', '')
     shipments_df['Zip Code'] = shipments_df['Zip Code'].astype(str).str.replace("'", "")
-    
-    shipments_df['Recipient Email'] = orders_df['Email']
 
-    shipments_df['Phone'] = shipments_df.apply(
-    lambda row: f"357{row['Phone']}" if row['Billing Country'] == "CY" and pd.notnull(row['Phone']) else row['Phone'],
-    axis=1
-)
+    shipments_df['Recipient Email'] = orders_df['Email']
+    shipments_df['Phone'] = orders_df['Shipping Phone']
     shipments_df['Payment Method'] = orders_df['Payment Method']
     shipments_df['Notes'] = orders_df['Notes']
     shipments_df['Area'] = orders_df["Shipping City"]
