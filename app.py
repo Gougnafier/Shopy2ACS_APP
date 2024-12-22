@@ -49,7 +49,7 @@ if uploaded_file:
     shipments_df['COD Amount'] = orders_df['Shipping Phone'].astype(float) + 1.5
     # Mettre 'COD Amount' à 0 si 'Payment Method' n'est pas "Cash on Delivery (COD)"
     shipments_df['COD Amount'] = shipments_df.apply(
-        lambda row: row['COD Amount'] if row['Payment Method'] == "Cash on Delivery (COD)" else 0,
+        lambda row: row['COD Amount'] if row['Total'] == "Cash on Delivery (COD)" else 0,
         axis=1)
     shipments_df['COD Amount'] = shipments_df['COD Amount'].astype(str).str.replace('.', ',', regex=False)
 
@@ -71,15 +71,3 @@ if uploaded_file:
     # Étape 4 : Télécharger le fichier CSV
     csv = shipments_df.to_csv(index=False, sep=';', encoding='utf-8')
     st.download_button("Télécharger le fichier CSV", data=csv, file_name="Created_Shipments.csv", mime="text/csv")
-
-    # Étape 5 : Télécharger le fichier Excel
-    excel_buffer = io.BytesIO()
-    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-        shipments_df.to_excel(writer, index=False)
-    excel_buffer.seek(0)
-    st.download_button(
-        "Télécharger le fichier Excel",
-        data=excel_buffer,
-        file_name="Created_Shipments.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
