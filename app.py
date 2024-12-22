@@ -50,4 +50,4 @@ if uploaded_file:
         )
 
         st.write(f"Aperçu des données traitées pour {country} :")
-        st.dataframe(orders_df)
+        st.dataframe(df)
