@@ -32,14 +32,19 @@ if uploaded_file:
     grouped_data = {country: df for country, df in orders_df.groupby('Shipping Country')}
 
     # Créer et permettre le téléchargement de fichiers pour chaque pays
+    st.divider()
     st.write("Téléchargez un fichier pour chaque 'Shipping Country' :")
 
     for country, df in grouped_data.items():
+        st.divider()
 
         shipments_df = dfShipment(df)
 
         # Générer le CSV pour le pays
         csv_data = df.to_csv(index=False, sep=';', encoding='utf-8')
+
+        st.write(f"Aperçu des données traitées pour {country} :")
+        st.dataframe(shipments_df)
         
         # Bouton de téléchargement pour ce pays
         st.download_button(
@@ -48,6 +53,3 @@ if uploaded_file:
             file_name=f"Orders_{country}.csv",
             mime="text/csv"
         )
-
-        st.write(f"Aperçu des données traitées pour {country} :")
-        st.dataframe(df)
