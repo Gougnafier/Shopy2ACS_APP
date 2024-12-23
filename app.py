@@ -25,9 +25,10 @@ if uploaded_file:
             print(f"Erreur avec ',' : {e1}")
             print(f"Erreur avec ';' : {e2}")
             orders_df = None
-        # Étape 1.1 : Aperçu du fichier chargé 
-        st.write("Aperçu du fichier chargé :")
-        st.dataframe(orders_df)
+            
+    # Étape 1.1 : Aperçu du fichier chargé 
+    st.write("Aperçu du fichier chargé :")
+    st.dataframe(orders_df)
 
     # Étape 2 : Traitement des données
     def merge_and_sum(group):
