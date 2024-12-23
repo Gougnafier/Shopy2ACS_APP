@@ -11,16 +11,23 @@ uploaded_file = st.file_uploader("Téléchargez votre fichier orders_export.csv"
 
 if uploaded_file:
     st.write("Fichier chargé avec succès !")
-    try:
-        orders_df = pd.read_csv(uploaded_file, sep=',')
-    try:
-        orders_df = pd.read_csv(uploaded_file, sep=';')
-    except Exception as e:
-        print(e)
 
-    # Étape 1.1 : Aperçu du fichier chargé 
-    st.write("Aperçu du fichier chargé :")
-    st.dataframe(orders_df)
+    try:
+        # Essayer de lire le fichier avec un séparateur par défaut (',')
+        orders_df = pd.read_csv(uploaded_file, sep=',')
+    except Exception as e1:
+        try:
+            # Si cela échoue, tenter avec un séparateur alternatif (';')
+            orders_df = pd.read_csv(uploaded_file, sep=';')
+        except Exception as e2:
+            # Si les deux échouent, afficher les erreurs et arrêter
+            print("Erreur lors de la lecture du fichier :")
+            print(f"Erreur avec ',' : {e1}")
+            print(f"Erreur avec ';' : {e2}")
+            orders_df = None
+        # Étape 1.1 : Aperçu du fichier chargé 
+        st.write("Aperçu du fichier chargé :")
+        st.dataframe(orders_df)
 
     # Étape 2 : Traitement des données
     def merge_and_sum(group):
