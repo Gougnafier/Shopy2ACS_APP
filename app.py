@@ -11,7 +11,12 @@ uploaded_file = st.file_uploader("Téléchargez votre fichier orders_export.csv"
 
 if uploaded_file:
     st.write("Fichier chargé avec succès !")
-    orders_df = pd.read_csv(uploaded_file, sep=',')
+    try:
+        orders_df = pd.read_csv(uploaded_file, sep=',')
+    try:
+        orders_df = pd.read_csv(uploaded_file, sep=';')
+    except Exception as e:
+        print(e)
 
     # Étape 1.1 : Aperçu du fichier chargé 
     st.write("Aperçu du fichier chargé :")
